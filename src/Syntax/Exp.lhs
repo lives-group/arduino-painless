@@ -44,4 +44,14 @@ types that support basic numeric operations
 >   EGt     : (IsEq t) => Exp t -> Exp t -> Exp Bool
 >   ELeq    : (IsEq t) => Exp t -> Exp t -> Exp Bool
 >   ELt     : (IsEq t) => Exp t -> Exp t -> Exp Bool
->                                  
+
+evaluating expressions
+
+> eval :: Exp t -> t
+> eval (EBool b) = b
+> eval (EChar c) = c
+> eval (EInt i) = i
+> eval (EWord w) = w
+> eval (EFloat f) = f
+> eval (EDouble d) = d
+>                    
