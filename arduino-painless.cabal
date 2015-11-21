@@ -15,8 +15,10 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lib
-  build-depends:       base >= 4.7 && < 5
+  exposed-modules:       Syntax.Exp
+                       , Eval.Eval
+  build-depends:         base >= 4.7 && < 5
+                       , mtl
   default-language:    Haskell2010
 
 executable arduino-painless-exe
