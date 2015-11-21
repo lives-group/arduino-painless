@@ -17,8 +17,10 @@ library
   hs-source-dirs:      src
   exposed-modules:       Syntax.Exp
                        , Eval.Eval
+                       , Pretty.PPrint
   build-depends:         base >= 4.7 && < 5
                        , mtl
+                       , pretty
   default-language:    Haskell2010
 
 executable arduino-painless-exe
