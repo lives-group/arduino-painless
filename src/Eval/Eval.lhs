@@ -11,11 +11,13 @@ Simple evaluation semantics
 
 
 > module Eval.Eval where  
-
+  
 > import Control.Monad  
 > import Control.Monad.Identity  
 
 > import Data.String
+
+> import qualified Prelude as P
   
 > import Syntax.Exp
   
@@ -39,17 +41,17 @@ Evaluation logic typeclass
 >    eval (EFloat f)   = return f                 
 >    eval (EDouble d)  = return d
 >    eval (EString s)  = return s
->    eval (EAdd e e')  = liftM2 (+) (eval e) (eval e')
->    eval (ESub e e')  = liftM2 (-) (eval e) (eval e')
->    eval (EMult e e') = liftM2 (*) (eval e) (eval e')
->    eval (EDiv e e')  = liftM2 (/) (eval e) (eval e')
->    eval (EMod e e')  = liftM2 mod (eval e) (eval e')
->    eval (EAnd e e')  = liftM2 (&&) (eval e) (eval e')
->    eval (EOr e e')   = liftM2 (||) (eval e) (eval e')
->    eval (ENot e)     = liftM not (eval e)
->    eval (EEq e e')   = liftM2 (==) (eval e) (eval e')
->    eval (ENEq e e')  = liftM2 (/=) (eval e) (eval e')
->    eval (EGeq e e')  = liftM2 (>=) (eval e) (eval e')
->    eval (EGt e e')   = liftM2 (>) (eval e) (eval e')
->    eval (ELeq e e')  = liftM2 (<=) (eval e) (eval e')
->    eval (ELt e e')   = liftM2 (<) (eval e) (eval e')
+>    eval (EAdd e e')  = liftM2 (P.+) (eval e) (eval e')
+>    eval (ESub e e')  = liftM2 (P.-) (eval e) (eval e')
+>    eval (EMult e e') = liftM2 (P.*) (eval e) (eval e')
+>    eval (EDiv e e')  = liftM2 (P./) (eval e) (eval e')
+>    eval (EMod e e')  = liftM2 P.mod (eval e) (eval e')
+>    eval (EAnd e e')  = liftM2 (P.&&) (eval e) (eval e')
+>    eval (EOr e e')   = liftM2 (P.||) (eval e) (eval e')
+>    eval (ENot e)     = liftM P.not (eval e)
+>    eval (EEq e e')   = liftM2 (P.==) (eval e) (eval e')
+>    eval (ENEq e e')  = liftM2 (P./=) (eval e) (eval e')
+>    eval (EGeq e e')  = liftM2 (P.>=) (eval e) (eval e')
+>    eval (EGt e e')   = liftM2 (P.>) (eval e) (eval e')
+>    eval (ELeq e e')  = liftM2 (P.<=) (eval e) (eval e')
+>    eval (ELt e e')   = liftM2 (P.<) (eval e) (eval e')

@@ -9,9 +9,12 @@ Definition of expressions for arduino programming.
 > {-# LANGUAGE StandaloneDeriving #-}
 
 > module Syntax.Exp where
-
+  
+> import Prelude hiding (not)
+  
+> import Data.Bits  
+> import Data.Ratio  
 > import Data.String
-> import Data.Ratio
   
 Expression syntax
 -----------------
@@ -78,6 +81,45 @@ types that support comparison
 > false :: Exp Bool
 > false = EBool False         
 
+> infixr 3 &&*
+  
+> (&&*) :: Exp Bool -> Exp Bool -> Exp Bool
+> e &&* e' = EAnd e e'
+
+> infixr 2 ||*
+
+> (||*) :: Exp Bool -> Exp Bool -> Exp Bool
+> e ||* e' = EOr e e'
+
+> not :: Exp Bool -> Exp Bool
+> not e = ENot e
+
+Equality and comparison operators.
+  
+> infix 4 ==*
+> infix 4 /=*
+> infix 4 >=*
+> infix 4 <=*
+> infix 4 >*
+> infix 4 <*
+  
+> (==*) :: IsEq t => Exp t -> Exp t -> Exp Bool
+> (==*) = EEq
+
+> (/=*) :: IsEq t => Exp t -> Exp t -> Exp Bool
+> (/=*) = ENEq
+
+> (>=*) :: IsOrd t => Exp t -> Exp t -> Exp Bool
+> (>=*) = EGeq
+
+> (<=*) :: IsOrd t => Exp t -> Exp t -> Exp Bool
+> (<=*) = ELeq
+
+> (>*) :: IsOrd t => Exp t -> Exp t -> Exp Bool
+> (>*) = EGt
+     
+> (<*) :: IsOrd t => Exp t -> Exp t -> Exp Bool
+> (<*) = ELt
   
 > data Exp t where
 >   EBool   :: Bool -> Exp Bool

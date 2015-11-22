@@ -8,3 +8,6 @@ functions.
 
 
 > module Syntax.ArduinoLib where
+
+data type for represeting functions of arduino library
+
