@@ -3,13 +3,20 @@ Expression evaluation
 
 Simple evaluation semantics 
 
-> {-# LANGUAGE GADTs, TypeFamilies #-}
+> {-# LANGUAGE GADTs #-}
+> {-# LANGUAGE FlexibleInstances #-}
+> {-# LANGUAGE OverloadedStrings #-}
+> {-# LANGUAGE StandaloneDeriving #-}
+> {-# LANGUAGE TypeFamilies #-}
+
 
 > module Eval.Eval where  
 
 > import Control.Monad  
 > import Control.Monad.Identity  
 
+> import Data.String
+  
 > import Syntax.Exp
   
 Definition of evaluation monad

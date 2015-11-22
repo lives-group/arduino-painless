@@ -69,6 +69,15 @@ types that support comparison
 > instance IsOrd Float
 > instance IsOrd Double
 > instance IsOrd String
+
+-- smart constructors
+  
+> true :: Exp Bool
+> true = EBool True
+
+> false :: Exp Bool
+> false = EBool False         
+
   
 > data Exp t where
 >   EBool   :: Bool -> Exp Bool
@@ -139,14 +148,19 @@ Numeric instances for Exp t
 >     mod  = EMod
 >     quot = EDiv
 >     rem  = error "Prelude.Integral.rem applied to EDSL types"
+>     quotRem = error "Prelude.Integral.quotRem applied to EDSL types"
+>     toInteger = error "Prelude.Integral.toInteger applied to EDSL types"          
 
 > instance (Constant t, IsFractional t, Show t) => Fractional (Exp t) where
 >     (/) = EDiv
 >     fromRational e = fromInteger (numerator e) / fromInteger (denominator e)
 >     recip = error "Prelude.Fractional.recipe applied to EDSL types"
 
-> instance Ord (Exp t)
-> instance Eq (Exp t)
+> instance Ord (Exp t) where
+>     compare = error "Prelude.Ord.compare applied to EDSL types"
+
+> instance Eq (Exp t) where
+>     (==) = error "Prelude.Eq.== applied to EDSL types"
       
 > instance (Constant t, Ord t) => Real (Exp t) where
 >     toRational = error "Prelude.Real.toRational applied to EDSL types"
