@@ -126,9 +126,9 @@ Equality and comparison operators.
 >   EChar   :: Char -> Exp Char
 >   EInt    :: Int  -> Exp Int
 >   EFloat  :: Float -> Exp Float
->   EDouble :: Double -> Exp Double
+>   EDouble :: Double -> Exp Double 
 >   EString :: String -> Exp String
->   EAdd    :: (IsNum t) => Exp t -> Exp t -> Exp t
+>   EAdd    :: (IsNum t) => Exp t v -> Exp t v -> Exp t
 >   EMult   :: (IsNum t) => Exp t -> Exp t -> Exp t
 >   ESub    :: (IsNum t) => Exp t -> Exp t -> Exp t
 >   EDiv    :: (IsFractional t) => Exp t -> Exp t -> Exp t
