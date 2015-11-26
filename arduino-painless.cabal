@@ -18,6 +18,7 @@ library
   exposed-modules:       Syntax.Exp
                        , Eval.Eval
                        , Pretty.PPrint
+                       , Syntax.Stmt
   build-depends:         base >= 4.7 && < 5
                        , mtl
                        , pretty
