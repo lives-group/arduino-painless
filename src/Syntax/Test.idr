@@ -19,27 +19,36 @@ instance DecEq Ty where
   decEq TInt TBool = No (boolNotInt . sym)
   decEq TBool TInt = No boolNotInt
   
-data Env : Type where
-  Nil  : Env
-  Cons : String -> Ty -> Env -> Env
+Env : Type
+Env = List (String , Ty)
+
+data In : {A : Type} -> A -> List A -> Type where
+  Here  : In x (x :: xs)
+  There : In x ys -> In x (y :: ys)  
   
-data TypeOf : String -> Ty -> Env -> Type where
-  Here  : TypeOf s t (Cons s t env)
-  There : TypeOf s t env -> TypeOf s t (Cons s' t' env)
+InEnv : String -> Ty -> Env -> Type
+InEnv s t env = In (s , t) env
 
-noTypeNil : Not (TypeOf s t [])
-noTypeNil Here impossible    
+inEnvInv : InEnv s t ((s',t') :: env) -> Either (s = s' , t = t') (InEnv s t env)
+inEnvInv Here = Left (Refl , Refl)
+inEnvInv (There pr) = Right pr
 
-typeOf : Dec (TypeOf s t env)
-typeOf {s = s}{t = t}{env = []} = No noTypeNil
-typeOf {s = s}{t = t}{env = (Cons s' t' env)} with (decEq s s')
-  typeOf {s = s}{t = t}{env = (Cons s' t' env)} | (Yes prf) with (decEq t t')
-    typeOf {s = s}{t = t}{env = (Cons s t env)} | (Yes Refl) | (Yes Refl) = Yes Here
-    typeOf {s = s}{t = t}{env = (Cons s' t' env)} | (Yes prf) | (No contra) 
-           with (typeOf {s = s} {t = t} {env = env})
-      typeOf {s = s}{t = t}{env = (Cons s' t' env)} | (Yes prf) | (No cpr) | (Yes pr) = Yes (There pr)
-      typeOf {s = s}{t = t}{env = (Cons s' t' env)} | (Yes prf) | (No cpr) | (No f) = ?rhs_3
-  typeOf {s = s}{t = t}{env = (Cons s' t' env)} | (No contra) = ?rhs_2
+inEnvDec : Dec (InEnv s t env)
+inEnvDec {s = s}{t = t}{env = []} = No (\ Here impossible)
+inEnvDec {s = s}{t = t}{env = ((s',t') :: xs)} with (decEq s s')
+  inEnvDec {s = s}{t = t}{env = ((s,t') :: xs)} | (Yes Refl) with (decEq t t')
+    inEnvDec {s = s}{t = t}{env = ((s,t) :: xs)} | (Yes Refl) | (Yes Refl) = Yes Here
+    inEnvDec {s = s}{t = t}{env = ((s,t') :: xs)} | (Yes Refl) | (No contra) 
+      with (inEnvDec {s = s}{t = t} {env = xs})
+      inEnvDec {s = s}{t = t}{env = ((s,t') :: xs)} | (Yes Refl) | (No ctr) | (Yes pr') 
+               = Yes (There pr')
+      inEnvDec {s = s}{t = t}{env = ((s,t') :: xs)} | (Yes Refl) | (No ctr) | (No ctr') 
+               = No (either (ctr . snd) ctr' . inEnvInv)
+  inEnvDec {s = s}{t = t}{env = ((s',t') :: xs)} | (No ctr) 
+      with (inEnvDec {s = s}{t = t}{env = xs})
+    inEnvDec {s = s}{t = t}{env = ((s',t') :: xs)} | (No ctr) | (Yes prf) = Yes (There prf)
+    inEnvDec {s = s}{t = t}{env = ((s',t') :: xs)} | (No ctr) | (No ctr') 
+               = No (either (ctr . fst) ctr' . inEnvInv)
   
 data Exp : Ty -> Type where
   EInt  : Int -> Exp TInt
@@ -50,9 +59,21 @@ data Exp : Ty -> Type where
   
 data Stmt : Env -> Type where
   Nop    : Stmt env
-  Decl   : (s : String) -> (t : Ty) -> Stmt (Cons s t env) -> Stmt env
-  Assign : (s : String) -> (e : Exp t) -> (pr : TypeOf s t env) -> Stmt env -> Stmt env 
+  Decl   : (s : String) -> (t : Ty) -> Stmt ((s , t) :: env) -> Stmt env
+  Assign : (s : String) -> (e : Exp t) -> In (s,t) env -> Stmt env -> Stmt env 
 
+
+typeOf : Exp t -> Ty
+typeOf {t = t} e = t
+
+Prop : Bool -> Type
+Prop True = Unit
+Prop False = Void
+
+buildProof : (s : String) -> (t : Ty) -> (e : Env) -> Prop (elem (s,t) e)  
+buildProof s t env = ?rhs
+
+-- syntax [var] ":=" [exp] = Assign var (buildProof var (typeOf exp)) exp 
 
 prog : Stmt Nil 
 prog = Decl "x" TInt (Assign "x" (EInt 0) Here Nop)
