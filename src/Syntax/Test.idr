@@ -50,30 +50,29 @@ inEnvDec {s = s}{t = t}{env = ((s',t') :: xs)} with (decEq s s')
     inEnvDec {s = s}{t = t}{env = ((s',t') :: xs)} | (No ctr) | (No ctr') 
                = No (either (ctr . fst) ctr' . inEnvInv)
   
-data Exp : Ty -> Type where
-  EInt  : Int -> Exp TInt
-  EBool : Bool -> Exp TBool
-  EPlus : Exp TInt -> Exp TInt -> Exp TInt
-  EAnd  : Exp TBool -> Exp TBool -> Exp TBool
-  EIf   : Exp TBool -> Exp t -> Exp t  
+data Exp : (e : Env) -> (t : Ty) -> Type where
+  EVar  : (s : String) -> {t : Ty} -> InEnv s t e -> Exp e t
+  EInt  : Int -> Exp e TInt
+  EBool : Bool -> Exp e TBool
+  EPlus : Exp e TInt -> Exp e TInt -> Exp e TInt
+  EAnd  : Exp e TBool -> Exp e TBool -> Exp e TBool
+  EIf   : Exp e TBool -> Exp e t -> Exp e t  
   
-data Stmt : Env -> Type where
-  Nop    : Stmt env
-  Decl   : (s : String) -> (t : Ty) -> Stmt ((s , t) :: env) -> Stmt env
-  Assign : (s : String) -> (e : Exp t) -> In (s,t) env -> Stmt env -> Stmt env 
-
-
-typeOf : Exp t -> Ty
-typeOf {t = t} e = t
-
 Prop : Bool -> Type
 Prop True = Unit
 Prop False = Void
 
-buildProof : (s : String) -> (t : Ty) -> (e : Env) -> Prop (elem (s,t) e)  
-buildProof s t env = ?rhs
+dec : Dec a -> Bool
+dec (Yes _) = True
+dec (No _)  = False
 
--- syntax [var] ":=" [exp] = Assign var (buildProof var (typeOf exp)) exp 
+data Stmt : Env -> Type where
+  Nop    : Stmt env
+  Decl   : (s : String) -> (t : Ty) -> Stmt ((s , t) :: env) -> Stmt env
+  Assign : (s : String) -> (e : Exp env t) -> 
+           (k : Prop (dec (inEnvDec {s = s}{t = t}{env = env}))) -> 
+           Stmt env -> Stmt env 
 
 prog : Stmt Nil 
-prog = Decl "x" TInt (Assign "x" (EInt 0) Here Nop)
+prog = Decl "x" TInt (Assign "x" (EInt 0) ?rhs1 Nop)
+
