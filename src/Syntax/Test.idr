@@ -34,13 +34,37 @@ data Exp : (e : Env) -> (t : Ty) -> Type where
   EAnd  : Exp e TBool -> Exp e TBool -> Exp e TBool
   EIf   : Exp e TBool -> Exp e t -> Exp e t  
   
-data Stmt : Env -> Type where
+data Stmt : (env : Env) -> Type where
   Nop    : Stmt env
   Decl   : (s : String) -> (t : Ty) -> Stmt ((s , t) :: env) -> Stmt env
   Assign : (s : String) -> (e : Exp env t) -> 
            (k : Prop (member s t env)) -> 
            Stmt env -> Stmt env 
 
-prog : Stmt Nil 
-prog = Decl "x" TInt (Assign "x" (EInt 0) () Nop)
+-- program without any sugar
 
+prog : Stmt []
+prog = Decl "y" TInt (
+         Decl "x" TInt (
+           Assign "x" (
+             EPlus (EVar "y" ()) (EInt 0)
+           )
+           ()
+           Nop
+         )
+       )
+
+syntax [var] ":=" [exp] ";" [smt] = Assign var exp () smt
+syntax int [var] ";" [stmt] = Decl var TInt stmt
+syntax use [var] = EVar var ()
+syntax [exp] ":+" [exp1] = EPlus exp exp1
+syntax end = Nop
+
+prog1 : Stmt []
+prog1 = int "y" ; 
+        int "x" ; 
+        "x" := (use "y") :+ (EInt 0) ; 
+        end
+  
+ 
+ 
