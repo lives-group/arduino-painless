@@ -4,7 +4,7 @@ module Arduino.Basics.Base
 
 -- definition of propositions
 
-Prop : Bool -> Type
-Prop True  = Unit
-Prop False = Void
+Prop : Maybe a -> Type
+Prop (Just _) = Unit
+Prop Nothing  = Void
 

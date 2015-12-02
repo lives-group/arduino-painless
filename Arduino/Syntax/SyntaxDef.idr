@@ -13,11 +13,14 @@ import Arduino.Syntax.Ty
 -- expressions
 
 syntax true = EBool True
-syntax false = EBool false
-syntax use [var] = EVar {s = var} () 
-syntax [e] ":+" [e'] = EAdd Refl e e'
+syntax false = EBool False
+syntax use [var] = EVar {s = var} Refl
+syntax [e] ":+" [e'] = EAdd e e'
  
 -- statements
 
-syntax [var] ":=" [exp] = Assign var exp ()
+syntax begin [s] = s
+syntax end = Nop
+syntax int [var] ";" [s] = VarDef var Int s
+syntax [var] ":=" [exp] ";" [st] = Assign var exp Refl st
 

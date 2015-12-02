@@ -10,7 +10,7 @@ import Arduino.Syntax.Ty
 
 data Stmt : (env : Env) -> Type where
   Nop        : Stmt env
-  VarDef     : (s : String) -> (t : Ty) -> Stmt ((s,t) :: env) -> Stmt env
-  Assign     : (s : String) -> Exp env t -> Prop (member s t env) -> Stmt env
-  While      : Exp env TBool -> Stmt env -> Stmt env
-  IfThenElse : Exp env TBool -> Stmt env -> Stmt env -> Stmt env
+  VarDef     : (s : String) -> (t : Type) -> Stmt ((s,t) :: env) -> Stmt env
+  Assign     : (s : String) -> Exp env t -> member s env = Just t -> Stmt env -> Stmt env
+  While      : Exp env Bool -> Stmt env -> Stmt env
+  IfThenElse : Exp env Bool -> Stmt env -> Stmt env -> Stmt env
