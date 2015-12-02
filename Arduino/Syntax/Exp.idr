@@ -33,6 +33,15 @@ data Exp : (env : Env) -> (t : Ty) -> Type where
   ELt  : Exp env t -> Exp env t -> Exp env TBool
   ELte : Exp env t -> Exp env t -> Exp env TBool
 
+instance Cast Integer (typeOf t) where
+  cast {t = TBool} = \ i => i > 0
+  cast {t = TInt} = id
+  cast {t = TChar} = cast . the Int
+  cast {t = TFloat} = cast
+  cast {t = TDouble} = cast
+  cast {t = TString} = cast
+        
+
 instance Num (typeOf t) => Num (Exp env t) where
   (+) = EAdd
   (*) = EMult
