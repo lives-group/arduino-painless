@@ -37,3 +37,8 @@ instance Num t => Num (Exp env t) where
   (+) = EAdd
   (*) = EMult
   fromInteger = ENum . fromInteger
+
+instance (Num t, Neg t) => Neg (Exp env t) where
+  negate x = 0 - x
+  (-) = ESub
+  abs x = x   -- to implement this, I'll need Ord.
