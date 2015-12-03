@@ -9,7 +9,7 @@ import Arduino.Syntax.Ty
 
 data Exp : (env : Env) -> Type -> Type where
   -- variables
-  EVar : member s env = Just t -> Exp env t
+  EVar : (s : String) -> member s env = Just t -> Exp env t
   -- constants
   EBool : Bool -> Exp env Bool
   EChar : Char -> Exp env Char

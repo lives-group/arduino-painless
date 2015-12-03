@@ -14,7 +14,7 @@ import Arduino.Syntax.Ty
 
 syntax true = EBool True
 syntax false = EBool False
-syntax use [var] = EVar {s = var} Refl
+syntax use [var] = EVar var Refl
 syntax [e] ":+" [e'] = EAdd e e'
 syntax [e] ":>=" [e'] = EGte e e'
  
@@ -22,8 +22,8 @@ syntax [e] ":>=" [e'] = EGte e e'
 
 syntax begin [s] = s
 syntax end = Nop
-syntax int [var] ";" [s] = VarDef var Int s
-syntax [var] ":=" [exp] ";" [st] = Assign var exp Refl st
-syntax [var] ":=" [exp] "." = Assign var exp Refl Nop
-syntax while [exp] "{" [stmt] "}" [stmt'] = While exp stmt stmt'
+syntax "int" [var] ";" [smt] = VarDef var Int smt
+syntax [var] ":=" [exp] ";" [smt] = Assign var exp Refl smt
+syntax while [exp] "{" [stmt] "}" smt = While exp stmt smt
+
 
