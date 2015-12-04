@@ -24,6 +24,6 @@ syntax begin [s] = s
 syntax end = Nop
 syntax "int" [var] ";" [smt] = VarDef var Int smt
 syntax [var] ":=" [exp] ";" [smt] = Assign var exp Refl smt
-syntax while [exp] "{" [stmt] "}" smt = While exp stmt smt
+syntax while [exp] "{" [stmt] "}" smt = While exp (stmt Nop) smt
 
 

@@ -19,8 +19,22 @@ prog0 =  VarDef "y" Int
 
 
 prog1 : Stmt []
-prog1 = int "y" ; 
-        int "x" ; 
-        "x" := (use "y") + 0 ; 
+prog1 = begin
+          int "y" ; 
+          int "x" ; 
+          "x" := (use "y") + 0 ; 
         end
 
+{-                
+        
+prog2 : Stmt []
+prog2 = begin
+          int "n"  ;
+          int "r"  ;
+          "r" := 1 ;
+          while ((use "n") :>= 0) {
+            "r" := (use "r") * (use "n") ;
+            "n" := (use "n") - 1 ; 
+          }          
+        end
+-}
