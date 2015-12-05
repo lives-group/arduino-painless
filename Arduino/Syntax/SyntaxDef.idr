@@ -12,18 +12,20 @@ import Arduino.Syntax.Ty
 
 -- expressions
 
-syntax true = EBool True
-syntax false = EBool False
-syntax use [var] = EVar var Refl
-syntax [e] ":+" [e'] = EAdd e e'
-syntax [e] ":>=" [e'] = EGte e e'
- 
+true : Exp env Bool
+true = EBool True
+
+false : Exp env Bool
+false = EBool Fasle
+
+var : (s : String) -> Exp env t
+var s = EVar s Refl
+
+(:>=) : Exp env t -> Exp env t -> Exp env Bool
+e :>= e' = EGte e e'
+  
 -- statements
 
-syntax begin [s] = s
-syntax end = Nop
-syntax "int" [var] ";" [smt] = VarDef var Int smt
-syntax [var] ":=" [exp] ";" [smt] = Assign var exp Refl smt
-syntax while [exp] "{" [stmt] "}" smt = While exp (stmt Nop) smt
-
+(:;:) : Stmt env -> Smt (env ++ env') -> Stmt (env ++ env')
+s :;: s' = Seq s s'
 

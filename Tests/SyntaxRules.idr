@@ -8,7 +8,7 @@ import Arduino.Syntax.SyntaxDef
 import Arduino.Syntax.Ty
 
 -- some boring tests
-
+{-
 prog0 : Stmt []
 prog0 =  VarDef "y" Int
              (VarDef "x" Int
@@ -25,16 +25,8 @@ prog1 = begin
           "x" := (use "y") + 0 ; 
         end
 
-{-                
+           
         
 prog2 : Stmt []
-prog2 = begin
-          int "n"  ;
-          int "r"  ;
-          "r" := 1 ;
-          while ((use "n") :>= 0) {
-            "r" := (use "r") * (use "n") ;
-            "n" := (use "n") - 1 ; 
-          }          
-        end
+prog2 = While (EBool True) Nop Nop
 -}
