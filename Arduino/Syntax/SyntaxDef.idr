@@ -16,16 +16,20 @@ true : Exp env Bool
 true = EBool True
 
 false : Exp env Bool
-false = EBool Fasle
+false = EBool False
 
 var : (s : String) -> Exp env t
 var s = EVar s Refl
 
+infix 4 :>=
+
 (:>=) : Exp env t -> Exp env t -> Exp env Bool
-e :>= e' = EGte e e'
+(:>=) e e' = EGte e e'
   
 -- statements
 
-(:;:) : Stmt env -> Smt (env ++ env') -> Stmt (env ++ env')
-s :;: s' = Seq s s'
+infixr 6 <>
+
+(<>) : Stmt env -> Stmt (env ++ env') -> Stmt (env ++ env')
+s <> s' = Seq s s'
 
